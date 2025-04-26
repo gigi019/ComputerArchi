@@ -1,0 +1,268 @@
+<html>
+    <head>
+        <title>ArchLab | Computer Architecture Modules</title>
+        <style>
+            :root {
+                --primary: #2563eb; /* Modern blue */
+                --primary-light: #3a0ca3;
+                --secondary: #4361ee; /* Purple for memory */
+                --tertiary: #4361ee; /* Orange for scheduling */
+                --light: #f8fafc;
+                --dark: #0f172a;
+                --gray: #64748b;
+                --light-gray: #e2e8f0;
+                --success: #10b981;
+                --border: 1px solid #e2e8f0;
+                --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            }
+            
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            }
+            
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+            
+            body {
+                background-color: #f1f5f9;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                padding: 2rem;
+            }
+            
+            .archlab-container {
+                width: 100%;
+                max-width: 800px;
+                background-color: white;
+                border-radius: 16px;
+                box-shadow: var(--shadow-lg);
+                overflow: hidden;
+                position: relative;
+            }
+            
+            .header {
+                background: linear-gradient(135deg, var(--primary), var(--secondary));
+                color: white;
+                padding: 2.5rem;
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .header::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: 
+                    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.1) 0%, transparent 30%),
+                    radial-gradient(circle at 80% 70%, rgba(255,255,255,0.1) 0%, transparent 30%);
+            }
+            
+            h1 {
+                font-size: 2rem;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+                position: relative;
+                z-index: 1;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+                font-weight: 400;
+                opacity: 0.9;
+                position: relative;
+                z-index: 1;
+            }
+            
+            .modules-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding: 2.5rem;
+            }
+            
+            @media (min-width: 640px) {
+                .modules-grid {
+                    grid-template-columns: 1fr 1fr;
+                }
+            }
+            
+            .module-card {
+                border-radius: 12px;
+                overflow: hidden;
+                border: var(--border);
+                transition: all 0.3s ease;
+                background-color: white;
+                position: relative;
+            }
+            
+            .module-card:hover {
+                transform: translateY(-4px);
+                box-shadow: var(--shadow-lg);
+            }
+            
+            .module-header {
+                padding: 1.5rem;
+                color: white;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .memory .module-header {
+                background: linear-gradient(135deg, var(--secondary), #8b5cf6);
+            }
+            
+            .scheduling .module-header {
+                background: linear-gradient(135deg, var(--secondary), #8b5cf6);
+            }
+            
+            .module-icon {
+                width: 48px;
+                height: 48px;
+                background-color: rgba(255,255,255,0.2);
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 1rem;
+            }
+            
+            .module-icon svg {
+                width: 24px;
+                height: 24px;
+                color: white;
+            }
+            
+            .module-title {
+                font-size: 1.25rem;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+            }
+            
+            .module-body {
+                padding: 1.5rem;
+            }
+            
+            .module-description {
+                color: var(--gray);
+                font-size: 0.9375rem;
+                line-height: 1.5;
+                margin-bottom: 1.5rem;
+            }
+            
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                font-weight: 500;
+                text-decoration: none;
+                transition: all 0.2s ease;
+                width: 100%;
+                border: none;
+                cursor: pointer;
+            }
+            
+            .btn-memory {
+                background-color: var(--secondary);
+                color: white;
+            }
+            
+            .btn-memory:hover {
+                background-color: #6d28d9;
+            }
+            
+            .btn-scheduling {
+                background-color: var(--tertiary);
+                color: white;
+            }
+            
+            .btn-scheduling:hover {
+                background-color: #3a0ca3;
+            }
+            
+            .footer {
+                text-align: center;
+                padding: 1.5rem;
+                border-top: var(--border);
+                color: var(--gray);
+                font-size: 0.875rem;
+            }
+            
+            .tech-dots {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background-image: radial-gradient(rgba(0,0,0,0.05) 1px, transparent 1px);
+                background-size: 10px 10px;
+                top: 0;
+                left: 0;
+                pointer-events: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="archlab-container">
+            <div class="tech-dots"></div>
+            
+            <div class="header">
+                <h1>Computer Architecture Lab</h1>
+                <p class="subtitle">Memory Management and Scheduling Algorithms</p>
+            </div>
+            
+            <div class="modules-grid">
+                <div class="module-card memory">
+                    <div class="module-header">
+                        <div class="module-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                            </svg>
+                        </div>
+                        <h3 class="module-title">Memory Management</h3>
+                    </div>
+                    <div class="module-body">
+                        <p class="module-description">
+                            Explore virtual memory systems and memory allocation strategies with interactive visualizations.
+                        </p>
+                        <button class="btn btn-memory" onclick="window.location.href='virtualmngmt.html'">
+                            Launch
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="module-card scheduling">
+                    <div class="module-header">
+                        <div class="module-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="module-title">Scheduling Algorithm</h3>
+                    </div>
+                    <div class="module-body">
+                        <p class="module-description">
+                            Visualize scheduling algorithms including RR, SRTF, Priority, FCSF and SJF with customizable parameters.
+                        </p>
+                        <button class="btn btn-scheduling" onclick="window.location.href='sched.html'">
+                            Launch
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer">
+                Computer Architecture Laboratory | Finals Project
+            </div>
+        </div>
+    </body>
+</html>

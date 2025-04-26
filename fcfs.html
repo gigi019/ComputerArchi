@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FCFS Scheduling | ArchLab</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #3b82f6;
+      --secondary: #7c3aed;
+      --tertiary: #f59e0b;
+      --light: #f8fafc;
+      --dark: #0f172a;
+      --gray: #64748b;
+      --light-gray: #e2e8f0;
+      --border: 1px solid #e2e8f0;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    body {
+      background-color: #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    
+    .archlab-container {
+      width: 100%;
+      max-width: 1600px;
+      background-color: white;
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      margin: 0 auto;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .subtitle {
+      font-size: 1rem;
+      font-weight: 400;
+      opacity: 0.9;
+    }
+    
+    .main-content {
+      display: flex;
+      gap: 2rem;
+      padding: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .panel {
+      flex: 1;
+      min-width: 300px;
+    }
+    
+    h2 {
+      font-size: 1.4rem;
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--light-gray);
+    }
+    
+    .control-panel {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+    
+    label {
+      font-weight: 500;
+      color: var(--dark);
+      font-size: 0.95rem;
+    }
+    
+    input[type="number"] {
+      padding: 0.75rem;
+      border: var(--border);
+      border-radius: 8px;
+      width: 120px;
+      font-size: 1rem;
+    }
+    
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      font-size: 1rem;
+    }
+    
+    button:hover {
+      background-color: var(--primary-light);
+    }
+    
+    .btn-secondary {
+      background-color: var(--secondary);
+    }
+    
+    .btn-secondary:hover {
+      background-color: #6d28d9;
+    }
+    
+    .btn-tertiary {
+      background-color: var(--tertiary);
+    }
+    
+    .btn-tertiary:hover {
+      background-color: #d97706;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    th {
+      background-color: var(--primary);
+      color: white;
+      padding: 1rem;
+      text-align: left;
+      font-weight: 500;
+    }
+    
+    td {
+      padding: 1rem;
+      border-bottom: var(--border);
+      color: var(--gray);
+    }
+    
+    tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+    
+    tr:hover {
+      background-color: #f1f5f9;
+    }
+    
+    .gantt-chart {
+      display: flex;
+      margin-top: 1.5rem;
+      overflow-x: auto;
+      padding: 1rem 0;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+    
+    .gantt-box {
+      min-width: 80px;
+      padding: 1rem;
+      text-align: center;
+      background-color: var(--primary);
+      color: white;
+      font-weight: 500;
+      margin-right: 2px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    
+    .time-markers {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+    }
+    
+    .time-marker {
+      font-size: 0.8rem;
+      color: var(--gray);
+      font-weight: 500;
+      flex: 1;
+      text-align: center;
+    }
+    
+    .action-buttons {
+      margin-top: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .metrics {
+      display: flex;
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+    
+    .metric-card {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      flex: 1;
+    }
+    
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-top: 0.5rem;
+    }
+    
+    @media (max-width: 768px) {
+      .main-content {
+        flex-direction: column;
+      }
+      
+      .panel {
+        width: 100%;
+      }
+      
+      .metrics {
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="archlab-container">
+    <div class="header">
+      <h1>First Come First Serve (FCFS) Scheduling</h1>
+      <p class="subtitle">Simulate non-preemptive CPU scheduling algorithm</p>
+    </div>
+    
+    <div class="main-content">
+      <div class="panel">
+        <h2>Process Details</h2>
+        <div class="control-panel">
+          <table id="input-table">
+            <thead>
+              <tr>
+                <th>Process</th>
+                <th>Arrival Time</th>
+                <th>Burst Time</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="input-body">
+              <tr>
+                <td>P1</td>
+                <td><input type="number" class="arrival-time" min="0" value="0"></td>
+                <td><input type="number" class="burst-time" min="1" value="1"></td>
+                <td><button class="btn-tertiary remove-process">Remove</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="action-buttons">
+          <button id="add-process" class="btn-secondary">Add Process</button>
+          <button id="calculate" class="btn">Calculate</button>
+          <button id="reset" class="btn-tertiary">Reset</button>
+        </div>
+      </div>
+      
+      <div class="panel" id="result-section" style="display: none;">
+        <h2>Results</h2>
+        <table id="result-table">
+          <thead>
+            <tr>
+              <th>Process</th>
+              <th>Arrival</th>
+              <th>Burst</th>
+              <th>Completion</th>
+              <th>Turnaround</th>
+              <th>Waiting</th>
+            </tr>
+          </thead>
+          <tbody id="result-body"></tbody>
+        </table>
+        
+        <div class="metrics">
+          <div class="metric-card">
+            <div>Average Turnaround Time</div>
+            <div class="metric-value" id="avg-turnaround">0</div>
+          </div>
+          <div class="metric-card">
+            <div>Average Waiting Time</div>
+            <div class="metric-value" id="avg-waiting">0</div>
+          </div>
+        </div>
+        
+        <h2><br>Gantt Chart</h2>
+        <div class="gantt-chart" id="gantt-chart"></div>
+        <div class="time-markers" id="time-markers"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const tbody = document.getElementById('input-body');
+
+      function updateProcessNumbers() {
+        const rows = tbody.rows;
+        for (let i = 0; i < rows.length; i++) {
+          rows[i].cells[0].textContent = 'P' + (i + 1);
+        }
+      }
+
+      // Add process button
+      document.getElementById('add-process').addEventListener('click', function() {
+        const rowCount = tbody.rows.length;
+        const newRow = tbody.insertRow();
+        
+        newRow.innerHTML = `
+          <td>P${rowCount + 1}</td>
+          <td><input type="number" class="arrival-time" min="0" value="0"></td>
+          <td><input type="number" class="burst-time" min="1" value="1"></td>
+          <td><button class="btn-tertiary remove-process">Remove</button></td>
+        `;
+        
+        // Add event listener to the new remove button
+        newRow.querySelector('.remove-process').addEventListener('click', function() {
+          if (tbody.rows.length > 1) {
+            tbody.removeChild(newRow);
+            updateProcessNumbers();
+          } else {
+            alert("You need at least one process!");
+          }
+        });
+      });
+      
+      // Add event listeners to existing remove buttons
+      document.querySelectorAll('.remove-process').forEach(btn => {
+        btn.addEventListener('click', function() {
+          if (tbody.rows.length > 1) {
+            tbody.removeChild(this.closest('tr'));
+            updateProcessNumbers();
+          } else {
+            alert("You need at least one process!");
+          }
+        });
+      });
+      
+      // Reset button
+      document.getElementById('reset').addEventListener('click', function() {
+        tbody.innerHTML = `
+          <tr>
+            <td>P1</td>
+            <td><input type="number" class="arrival-time" min="0" value="0"></td>
+            <td><input type="number" class="burst-time" min="1" value="1"></td>
+            <td><button class="btn-tertiary remove-process">Remove</button></td>
+          </tr>
+        `;
+        
+        // Re-add event listeners to remove buttons
+        document.querySelectorAll('.remove-process').forEach(btn => {
+          btn.addEventListener('click', function() {
+            if (tbody.rows.length > 1) {
+              tbody.removeChild(this.closest('tr'));
+              updateProcessNumbers();
+            } else {
+              alert("You need at least one process!");
+            }
+          });
+        });
+        
+        document.getElementById('result-section').style.display = 'none';
+      });
+      
+      // Calculate button
+      document.getElementById('calculate').addEventListener('click', function() {
+        // Get all processes data
+        const processes = [];
+        const rows = tbody.rows;
+        
+        for (let i = 0; i < rows.length; i++) {
+          const arrival = parseInt(rows[i].querySelector('.arrival-time').value) || 0;
+          const burst = parseInt(rows[i].querySelector('.burst-time').value);
+          if (isNaN(burst) || burst <= 0) {
+            alert(`Burst time of process P${i+1} must be > 0.`);
+            return;
+          }
+          processes.push({
+            id: `P${i + 1}`,
+            arrival: arrival,
+            burst: burst
+          });
+        }
+        
+        // Sort processes by arrival time (FCFS)
+        processes.sort((a, b) => a.arrival - b.arrival);
+        
+        // Calculate completion, turnaround, and waiting times
+        let currentTime = 0;
+        let totalTurnaround = 0;
+        let totalWaiting = 0;
+        let gantt = [];
+        
+        processes.forEach(process => {
+          // If the process arrives after current time, wait for it
+          if (currentTime < process.arrival) {
+            currentTime = process.arrival;
+          }
+          
+          gantt.push({
+            id: process.id,
+            start: currentTime,
+            end: currentTime + process.burst
+          });
+          
+          process.completion = currentTime + process.burst;
+          process.turnaround = process.completion - process.arrival;
+          process.waiting = process.turnaround - process.burst;
+          
+          totalTurnaround += process.turnaround;
+          totalWaiting += process.waiting;
+          
+          currentTime = process.completion;
+        });
+        
+        // Update results table
+        const resultBody = document.getElementById('result-body');
+        resultBody.innerHTML = '';
+        
+        processes.forEach(process => {
+          resultBody.innerHTML += `
+            <tr>
+              <td>${process.id}</td>
+              <td>${process.arrival}</td>
+              <td>${process.burst}</td>
+              <td>${process.completion}</td>
+              <td>${process.turnaround}</td>
+              <td>${process.waiting}</td>
+            </tr>`;
+        });
+        
+        document.getElementById('avg-turnaround').textContent = (totalTurnaround / processes.length).toFixed(2);
+        document.getElementById('avg-waiting').textContent = (totalWaiting / processes.length).toFixed(2);
+        document.getElementById('result-section').style.display = 'block';
+        
+        // Update Gantt chart
+        const ganttChart = document.getElementById('gantt-chart');
+        const timeMarkers = document.getElementById('time-markers');
+        ganttChart.innerHTML = '';
+        timeMarkers.innerHTML = '';
+        
+        // Create Gantt boxes
+        gantt.forEach((g, index) => {
+          const box = document.createElement('div');
+          box.className = 'gantt-box';
+          box.textContent = g.id;
+          box.style.flex = `${g.end - g.start} 0 auto`;
+          ganttChart.appendChild(box);
+        });
+        
+        // Create time markers
+        const timePoints = [0];
+        gantt.forEach(g => {
+          if (!timePoints.includes(g.start)) timePoints.push(g.start);
+          if (!timePoints.includes(g.end)) timePoints.push(g.end);
+        });
+        timePoints.sort((a, b) => a - b);
+        
+        timePoints.forEach(time => {
+          const marker = document.createElement('div');
+          marker.className = 'time-marker';
+          marker.textContent = time;
+          timeMarkers.appendChild(marker);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
